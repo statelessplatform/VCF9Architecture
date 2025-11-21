@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="VMware Cloud Foundation 9.0 Interactive Architecture Builder - Complete Lifecycle Management">
+    <meta name="keywords" content="VMware, VCF, Cloud Foundation, vSphere, Architecture, SDDC">
+    <meta name="author" content="VCF Architecture Builder">
+    <title>VMware Cloud Foundation 9.0 - Architecture Builder v2.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body data-theme="light">
+    <!-- Left Sidebar - Build Actions -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>🏗️ VCF 9.0</h2>
+            <p class="subtitle">Architecture Builder</p>
+        </div>
+
+        <!-- Architecture Overview -->
+        <div class="overview-section">
+            <h3>📋 Overview</h3>
+            <div class="overview-text">
+                <p>Build and manage your VMware Cloud Foundation private cloud infrastructure with full lifecycle
+                    operations.</p>
+            </div>
+        </div>
+
+        <!-- Build Controls -->
+        <div class="build-section">
+            <h3>🔨 Build Infrastructure</h3>
+            <button class="action-btn" id="buildMgmtDomain">
+                <span>🎛️ Build Mgmt Domain</span>
+            </button>
+            <button class="action-btn" id="deployMgmtComponents">
+                <span>📦 Deploy Mgmt Components</span>
+            </button>
+            <button class="action-btn" id="addWorkloadDomain">
+                <span>➕ Add Workload Domain</span>
+            </button>
+            <button class="action-btn" id="addCluster">
+                <span>📦 Add Cluster</span>
+            </button>
+            <button class="action-btn" id="addHost">
+                <span>🖥️ Add ESXi Host</span>
+            </button>
+            <button class="action-btn" id="deployVM">
+                <span>💻 Deploy VM</span>
+            </button>
+        </div>
+
+        <!-- Simulation Controls -->
+        <div class="build-section">
+            <h3>⚡ Simulations</h3>
+            <button class="action-btn" id="simulateHA">
+                <span>⚠️ Host Failure (HA)</span>
+            </button>
+            <button class="action-btn" id="restartHost">
+                <span>🔄 Restart ESXi Host</span>
+            </button>
+            <button class="action-btn" id="enableDRS">
+                <span>⚖️ Enable DRS</span>
+            </button>
+            <button class="action-btn" id="vMotionVM">
+                <span>🔀 vMotion VM</span>
+            </button>
+        </div>
+
+        <!-- Management -->
+        <div class="build-section">
+            <h3>🔧 Management</h3>
+            <button class="action-btn" id="resetAll">
+                <span>🔄 Reset All</span>
+            </button>
+        </div>
+
+        <!-- Quick Stats         -->
+        <div class="stats-section">
+            <h3>📊 Statistics</h3>
+            <div class="stat-item">
+                <span>Domains:</span>
+                <span id="domainCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Clusters:</span>
+                <span id="clusterCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Hosts:</span>
+                <span id="hostCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span>VMs:</span>
+                <span id="vmCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Mgmt Components:</span>
+                <span id="mgmtComponentCount">0</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>VMware Cloud Foundation 9.0</h1>
+                <p class="tagline">Interactive Architecture Builder v2.0</p>
+            </div>
+            <div class="header-controls">
+                <button class="btn-icon" id="userGuideBtn" title="User Guide">
+                    <span class="icon">📖</span>
+                </button>
+                <!-- iOS-style Theme Toggle -->
+                <div class="theme-toggle-wrapper" title="Toggle Theme">
+                    <input type="checkbox" id="themeToggle" class="theme-toggle-checkbox">
+                    <label for="themeToggle" class="theme-toggle-label">
+                        <span class="theme-toggle-icon sun">☀️</span>
+                        <span class="theme-toggle-icon moon">🌙</span>
+                        <span class="theme-toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </header>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label">Status:</span>
+                <span class="status-value" id="clusterStatus">Ready to Build</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Last Action:</span>
+                <span class="status-value" id="lastAction">None</span>
+            </div>
+        </div>
+
+        <!-- Visualization Canvas -->
+        <div class="canvas-container">
+            <div id="canvasContent"></div>
+        </div>
+    </main>
+
+    <!-- User Guide Modal -->
+    <div class="modal" id="userGuideModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📖 User Guide</h2>
+                <button class="modal-close" id="closeGuide">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Welcome to VCF 9.0 Architecture Builder v2.0!</h3>
+                <p>Build and manage your complete VMware Cloud Foundation infrastructure with full lifecycle operations
+                    including deployment, scaling, and deletion.</p>
+
+                <h4>🔨 Build Infrastructure</h4>
+                <ul>
+                    <li><strong>Build Mgmt Domain:</strong> Creates management domain with 3 ESXi hosts and
+                        Management-Cluster-01</li>
+                    <li><strong>Deploy Mgmt Components:</strong> Deploys VCF management stack (vCenter, NSX, SDDC
+                        Manager, etc.)</li>
+                    <li><strong>Add Workload Domain:</strong> Creates workload domain with dedicated vCenter deployed in
+                        management cluster</li>
+                    <li><strong>Add Cluster:</strong> Creates new cluster in the most recent domain</li>
+                    <li><strong>Add ESXi Host:</strong> Opens modal to select domain and cluster for host placement</li>
+                    <li><strong>Deploy VM:</strong> Opens modal to select cluster (DRS) or specific host for VM
+                        deployment</li>
+                </ul>
+
+                <h4>⚡ Simulations</h4>
+                <ul>
+                    <li><strong>Host Failure (HA):</strong> Simulates random host failure with automatic VM restart on
+                        other hosts</li>
+                    <li><strong>Restart ESXi Host:</strong> Gracefully restarts random host (vMotion VMs first, then
+                        restart, then restore)</li>
+                    <li><strong>Enable DRS:</strong> Balances VMs across hosts within each cluster (cluster-aware)</li>
+                    <li><strong>vMotion VM:</strong> Opens modal to select VM and target host for live migration (same
+                        cluster only)</li>
+                </ul>
+
+                <h4>🗑️ Delete Operations</h4>
+                <ul>
+                    <li><strong>Delete Host:</strong> Click delete button on host card. Auto-migrates VMs or requires
+                        manual migration</li>
+                    <li><strong>Delete Cluster:</strong> Click delete button on cluster card. Cannot delete primary
+                        management cluster. Must have zero VMs</li>
+                    <li><strong>Delete Domain:</strong> Click delete button on domain card. Cannot delete management
+                        domain. Removes vCenter and all resources</li>
+                </ul>
+
+                <h4>📋 VCF 9.0 Architecture</h4>
+                <ul>
+                    <li><strong>Management Domain:</strong> Runs all VCF control plane components (SDDC Manager,
+                        vCenters, NSX, Aria Suite)</li>
+                    <li><strong>Workload Domains:</strong> Run business VMs only. Each gets dedicated vCenter deployed
+                        in management domain</li>
+                    <li><strong>vCenter Deployment:</strong> Management vCenter + 1 vCenter per workload domain (all in
+                        management cluster)</li>
+                    <li><strong>NSX Deployment:</strong> NSX Manager Cluster for management + optional NSX for workload
+                        domains</li>
+                </ul>
+
+                <h4>⚙️ Features</h4>
+                <ul>
+                    <li>✅ Full VCF 9.0 lifecycle management</li>
+                    <li>✅ Proper vCenter deployment per domain</li>
+                    <li>✅ Cluster-specific host naming</li>
+                    <li>✅ Modal-based selections</li>
+                    <li>✅ Delete operations with validation</li>
+                    <li>✅ Dark/Light theme toggle</li>
+                    <li>✅ Real-time architecture visualization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- VM Deployment Modal -->
+    <div class="modal" id="vmDeployModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💻 Deploy Virtual Machine</h2>
+                <button class="modal-close" id="closeDeployModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Select Deployment Target</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Choose where to deploy your VM (cluster
+                    DRS or specific host)</p>
+
+                <div id="deploymentTargets"></div>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                    <button class="action-btn" id="cancelDeploy" style="width: 100%; background: #666;">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESXi Host Add Modal -->
+    <div class="modal" id="hostAddModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🖥️ Add ESXi Host</h2>
+                <button class="modal-close" id="closeHostModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Select Target Cluster</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Choose which cluster to add the ESXi host
+                    to</p>
+
+                <div id="hostTargets"></div>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                    <button class="action-btn" id="cancelAddHost" style="width: 100%; background: #666;">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- vMotion Modal -->
+    <div class="modal" id="vMotionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔀 vMotion Virtual Machine</h2>
+                <button class="modal-close" id="closeVMotionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Select VM and Target Host</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Choose VM to migrate and destination host
+                    (within same cluster)</p>
+
+                <div id="vMotionTargets"></div>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                    <button class="action-btn" id="cancelVMotion" style="width: 100%; background: #666;">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
